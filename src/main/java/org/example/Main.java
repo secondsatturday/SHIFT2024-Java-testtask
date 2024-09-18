@@ -186,7 +186,7 @@ public class Main {
         if(showStatistics == 1) {
             /* Вывод краткой статистики */
             System.out.println("Short statistics.");
-            System.out.println("The number elements.");
+            System.out.println("The number of elements of each type.");
             if(classReceived.contains("Integer")) System.out.println("integers: " + numInt);
             if(classReceived.contains("Float")) System.out.println("floats: " + numFloat);
             if(classReceived.contains("String")) System.out.println("strings: " + numString);
