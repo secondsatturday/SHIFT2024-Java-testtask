@@ -15,6 +15,20 @@ public class Main {
     // Если нужно добавить строку в конец файла, а не перезаписывать файл с нуля, то значение для имени файла будет true
     static Map<String,Boolean> filesToAppend = new HashMap<>();
 
+    static Integer numInt = 0;
+    static Integer minInt = 0;
+    static Integer maxInt = 0;
+    static Integer sumInt = 0;
+
+    static Integer numFloat = 0;
+    static Float minFloat = 0F;
+    static Float maxFloat = 0F;
+    static Float sumFloat = 0F;
+
+    static Integer numString = 0;
+    static Integer minLenString = 0;
+    static Integer maxLenString = 0;
+
     public static void handleArgs(List<String> args) {
 
         List<String> receivedOptions = new ArrayList<>();
@@ -90,12 +104,6 @@ public class Main {
             }
             receivedOptions.add(curArg);
         }
-
-        ListIterator itr = inputPaths.listIterator();
-        while(itr.hasNext()) {
-            Object el = itr.next();
-            System.out.println(el);
-        }
     }
 
     public static void doOutput() {
@@ -121,19 +129,93 @@ public class Main {
             }
         }
 
-        /* Фильтрация полученных строк */
+        /* Фильтрация полученных строк и сбор статистики */
+        List<String> classReceived = new ArrayList<>();
         ListIterator<String> itr = inputLines.listIterator();
         while(itr.hasNext()) {
             Object element = itr.next();
-
             try {
-                print(Integer.parseInt(element.toString()));
+                Integer a = Integer.parseInt(element.toString());
+                print(a);
+                if(!classReceived.contains(a.getClass().getSimpleName())) {
+                    classReceived.add(a.getClass().getSimpleName());
+                    numInt = 1;
+                    minInt = a;
+                    maxInt = a;
+                    sumInt = a;
+                } else {
+                    numInt += 1;
+                    if(a < minInt) minInt = a;
+                    if(a > maxInt) maxInt = a;
+                    sumInt += a;
+                }
             } catch(NumberFormatException e1) {
                 try {
-                    print(Float.parseFloat(element.toString()));
+                    Float a = Float.parseFloat(element.toString());
+                    print(a);
+                    if(!classReceived.contains(a.getClass().getSimpleName())) {
+                        classReceived.add(a.getClass().getSimpleName());
+                        numFloat = 1;
+                        minFloat = a;
+                        maxFloat = a;
+                        sumFloat = a;
+                    } else {
+                        numFloat += 1;
+                        if(a < minFloat) minFloat = a;
+                        if(a > maxFloat) maxFloat = a;
+                        sumFloat += a;
+                    }
                 } catch(NumberFormatException e2) {
-                    print(element.toString());
+                    String a = element.toString();
+                    print(a);
+                    if(!classReceived.contains(a.getClass().getSimpleName())) {
+                        classReceived.add(a.getClass().getSimpleName());
+                        numString = 1;
+                        minLenString = a.length();
+                        maxLenString = a.length();
+                    } else {
+                        numString += 1;
+                        if(a.length() < minLenString) minLenString = a.length();
+                        if(a.length() > maxLenString) maxLenString = a.length();
+                    }
                 }
+            }
+        }
+
+        /* Вывод статистики */
+        if(showStatistics == 1) {
+            /* Вывод краткой статистики */
+            System.out.println("Short statistics.");
+            System.out.println("The number elements.");
+            if(classReceived.contains("Integer")) System.out.println("integers: " + numInt);
+            if(classReceived.contains("Float")) System.out.println("floats: " + numFloat);
+            if(classReceived.contains("String")) System.out.println("strings: " + numString);
+        } else if(showStatistics == 2) {
+            /* Вывод полной статистики */
+            System.out.println("Full statistics.");
+            if(classReceived.contains("Integer")) {
+                System.out.println("Integer elements.");
+                System.out.println("Number: " + numInt);
+                System.out.println("Min: " + minInt);
+                System.out.println("Max: " + maxInt);
+                System.out.println("Sum: " + sumInt);
+                System.out.println("Average: " + (sumInt / numInt) + "\n");
+            }
+
+            if(classReceived.contains("Float")) {
+                System.out.println("Float elements.");
+                System.out.println("Number: " + numFloat);
+                System.out.println("Min: " + minFloat);
+                System.out.println("Max: " + maxFloat);
+                System.out.println("Sum: " + sumFloat);
+                System.out.println("Average: " + (sumFloat / numFloat) + "\n");
+            }
+
+            if(classReceived.contains("String")) {
+                System.out.println("String elements.");
+                System.out.println("Number: " + numString);
+                System.out.println("Min length: " + minLenString);
+                System.out.println("Max length: " + maxLenString);
             }
         }
 
